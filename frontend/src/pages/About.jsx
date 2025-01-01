@@ -12,26 +12,25 @@ function About() {
         <strong className="text-blue-800 font-semibold hover:scale-105 duration-500">
           {profile?.user?.name}
         </strong>{" "}
-        a proficient full stack developer with a robust skill set spanning both
-        front-end and back-end technologies. With a passion for building
-        dynamic, responsive, and user-friendly web applications, Akhil excels in
-        crafting seamless digital experiences.
+        Highly motivated and adaptable full-stack developer passionate about creating
+        dynamic and user-friendly web applications. Skilled in front-end and back-end
+        technologies, cloud platforms, and DevOps tools. Known for strong problem-solving 
+        bilities, a quick learning curve, and excellent communication skills, I excel in 
+        collaborative and independent environments while delivering impactful digital solution
       </p>
       <h2 className="font-semibold text-blue-800 text-xl">
         Technical Expertise:
       </h2>
       <p>
-        Front-End: Adept in modern JavaScript frameworks and libraries such as
-        React.js, Angular, and Vue.js. Skilled in HTML5, CSS3, and responsive
-        design principles to create intuitive and visually appealing interfaces.
-        Back-End: Proficient in server-side technologies including Node.js,
-        Express.js, and Django. Experienced with database management using SQL
-        and NoSQL databases like MySQL, PostgreSQL, and MongoDB. DevOps:
-        Knowledgeable in containerization and orchestration tools such as Docker
-        and Kubernetes. Familiar with continuous integration and deployment
-        (CI/CD) pipelines. Cloud Services: Experience with cloud platforms like
-        AWS, Azure, and Google Cloud, enabling scalable and reliable application
-        deployment.
+      I specialize in the MERN stack (MongoDB, Express.js, React.js, Node.js) and have
+      a solid background in JavaScript, Python, HTML5, and CSS3. I am proficient in 
+      using Redux, Axios, JWT for state management, API integration, and secure authentication.
+      My experience also includes working with databases such as MongoDB and MySQL to design
+      efficient data storage solutions. I leverage tools like Git, VS Code, and Figma for 
+      version control, project management, and creating intuitive user interfaces. With a focus 
+      on building scalable, dynamic web applications, I follow industry best practices to deliver
+      high-performance, user-centric solutions. My goal is to ensure efficient development workflows,
+      optimize application performance, and create seamless, interactive user experiences.
       </p>
       <h2 className="font-semibold text-blue-800 text-xl">
         Professional Highlights:
@@ -46,7 +45,7 @@ function About() {
       </p>
       <br />
       <span>
-        Akhil K is dedicated to leveraging his expertise to contribute to
+        Yash is dedicated to leveraging his expertise to contribute to
         innovative projects and drive technological advancements. Whether
         working on front-end interfaces or back-end logic, he is passionate
         about delivering exceptional digital solutions that meet user needs and
@@ -56,13 +55,7 @@ function About() {
         Personal Interests and Inspiration:
       </h2>
       <p>
-        Beyond his professional achievements, Akhil is a big fan of cricket and
-        holds immense admiration for <strong> King Kohli.</strong> His favorite
-        person and biggest inspiration is his twin brother,{" "}
-        <strong>Ankush.</strong> Their friendly rivalry and deep bond have
-        significantly shaped Akhil’s journey. Ankush is not only a great
-        competitor but also a steadfast friend, constantly motivating Akhil to
-        strive for excellence.
+      I am passionate about technology, particularly web development, problem-solving, and continuous learning. I thrive on tackling challenging projects, such as building an Uber-like app using the MERN stack, where I applied my skills in React.js, Node.js, MongoDB, and Express.js. I’m inspired by the dynamic tech landscape and aim to contribute to impactful projects while constantly honing my skills. In addition, I value collaboration, teamwork, and creativity, believing that diverse perspectives drive innovative solutions. In the future, I aspire to master emerging technologies and contribute to creating meaningful, user-centered solutions
       </p>
     </div>
   );

@@ -1,0 +1,48 @@
+Yash Srivastav
+lucknow, U.P. 936-926-0135| yashsrivastavaclass11@gmail.com | Linkedln | GitHub
+Highly motivated individual with desire to take on new challenges. Strong work ethics, adaptability, and strong
+interpersonal skills. Quickly adapt at working efficiently unsupervised and mastering new skills.
+System Design Fundamentals
+Udemy
+React.js
+Scaler
+DBMS Course
+Scaler
+OOPS Course
+Scaler
+IndianInstituteofTechnology,Mandi
+ResearchIntern
+Mandi,H.P.
+Mar2024–Jun2024
+• Worked on HIMCOSTE-sponsored project titled "Smart Blood, Vaccine and Medicine Monitoring System".
+• Developed a dynamic website for the system and enabled the data coming from the Arduino to appear on the
+localhost by setting up the Node.js server.
+• Implemented Firestore database for data management, storing, and retrieving data. • Trained Machine Learning
+models on the collected data to predict the future temperatures.
+PROJECTS
+Personal Portfolio :
+Skills: JavaScript, React.js, Tailwind CSS and Axios.
+• The project uses React to build and manage the UI with a component-based architecture.
+• Tailwind CSS provides responsive styling, while JavaScript handles dynamic content and behavior.
+• React Hook Form and Axios manage form submissions, and React Scroll enables smooth scrolling interaction.
+Patent Data Scraper:
+Skills: Python, Flask Selenium and Beautifulsoup.
+• A web application built with Flask that scrapes patent data from Google Patents using Beautiful Soup and Requests.
+Client-side JavaScript enhances the user experience by dynamically rendering the scraped data.
+• This script scrapes the data such as price, rating, feature, etc. from an e-commerce website.
+• Export the data into excel sheet. Built using Selenium and BeautifulSoup library of Python.
+SKILLS
+• Languages: JavaScript, Python, HTML5 and CSS3.
+• Libraries: React.js, Redux Toolkit, Context API, Axios and JWT .
+• Frameworks: Node.js, Express.js, Tailwind CSS, Tailwind.
+• Visualization Libraries: Flask.
+• Databases: MySQL and MongoDB.
+• Tools: Git, GitHub, Figma, ChatGPT, Jira, Slack.
+• IDEs: Anaconda, VScode.
+• Soft Skills: Problem Solving, Time Management, Communication, and Presentation skills.
+EDUCATION
+Dr.A.P.J.Abdul Kalam Technical University
+BachelorofTechnology
+St. Xavier's Senior Secondary School
+Intermediate
+CERTIFICATES
