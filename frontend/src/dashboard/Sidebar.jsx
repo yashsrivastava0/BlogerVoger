@@ -56,11 +56,11 @@ function Sidebar({ setComponent }) {
         </div>
         <div className="text-center">
           <img
-            className="w-24 h-24 rounded-full mx-auto mb-2"
-            src={profile?.user?.photo?.url}
+            className="w-24 h-24 rounded-full mx-auto mb-2 object-cover"
+            src={profile?.user?.photo?.url || profile?.photo?.url || "/user.jpg"}
             alt=""
           />
-          <p className="text-lg font-semibold">{profile?.user?.name}</p>
+          <p className="text-lg font-semibold">{profile?.user?.name || profile?.name || "User"}</p>
         </div>
         <ul className="space-y-6 mx-4">
           <button

@@ -134,7 +134,9 @@ function Detail() {
                   <div className="flex-1">
                     <div className="flex items-center justify-between mb-1">
                       <h4 className="font-semibold">{comment.user?.name || "Unknown User"}</h4>
-                      <span className="text-xs text-gray-500 dark:text-gray-400">{format(new Date(comment.createdAt), "MMM d, yyyy")}</span>
+                      <span className="text-xs text-gray-500 dark:text-gray-400">
+                        {comment.createdAt ? format(new Date(comment.createdAt), "MMM d, yyyy") : format(new Date(), "MMM d, yyyy")}
+                      </span>
                     </div>
                     <p className="text-gray-700 dark:text-gray-300">{comment.text}</p>
                   </div>

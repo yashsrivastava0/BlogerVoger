@@ -1,0 +1,8 @@
+{
+  "name": "BlogerVoger",
+  "description": "Full-stack blog platform for discovering, reading, and publishing inspiring articles across multiple categories with creator dashboards and dark mode.",
+  "capabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ],
+  "permissions": []
+}
