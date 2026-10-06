@@ -13,7 +13,8 @@ export const createBlog = async (req, res) => {
         message: "Invalid photo format. Only jpg and png are allowed",
       });
     }
-    const { title, category, about } = req.body;
+    const { title, category, about, tags } = req.body;
+  const parsedTags = tags ? JSON.parse(tags) : [];
     if (!title || !category || !about) {
       return res
         .status(400)
@@ -33,6 +34,7 @@ export const createBlog = async (req, res) => {
       title,
       about,
       category,
+      tags: parsedTags,
       adminName,
       adminPhoto,
       createdBy,
@@ -96,4 +98,41 @@ export const updateBlog = async (req, res) => {
     return res.status(404).json({ message: "Blog not found" });
   }
   res.status(200).json(updatedBlog);
+};
+
+export const likeBlog = async (req, res) => {
+  const { id } = req.params;
+  const blog = await Blog.findById(id);
+  if (!blog) {
+    return res.status(404).json({ message: "Blog not found" });
+  }
+  const index = blog.likes.indexOf(req.user._id);
+  if (index === -1) {
+    blog.likes.push(req.user._id);
+  } else {
+    blog.likes.splice(index, 1);
+  }
+  await blog.save();
+  res.status(200).json({ message: "Like updated", likes: blog.likes });
+};
+
+export const commentBlog = async (req, res) => {
+  const { id } = req.params;
+  const { text } = req.body;
+  if (!text) {
+    return res.status(400).json({ message: "Comment text is required" });
+  }
+  const blog = await Blog.findById(id);
+  if (!blog) {
+    return res.status(404).json({ message: "Blog not found" });
+  }
+  const newComment = {
+    user: req.user._id,
+    text,
+  };
+  blog.comments.push(newComment);
+  await blog.save();
+  // Populate the new comment user to return it
+  await blog.populate('comments.user', 'name photo');
+  res.status(200).json({ message: "Comment added", comments: blog.comments });
 };

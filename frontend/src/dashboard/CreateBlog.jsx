@@ -1,17 +1,18 @@
-import axios from "axios";
 import React, { useState } from "react";
+import { apiRequest } from "/src/services/api";
 import toast from "react-hot-toast";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
 function CreateBlog() {
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
   const [about, setAbout] = useState("");
-
+  const [tags, setTags] = useState("");
   const [blogImage, setBlogImage] = useState("");
   const [blogImagePreview, setBlogImagePreview] = useState("");
 
   const changePhotoHandler = (e) => {
-    console.log(e);
     const file = e.target.files[0];
     const reader = new FileReader();
     reader.readAsDataURL(file);
@@ -27,99 +28,117 @@ function CreateBlog() {
     formData.append("title", title);
     formData.append("category", category);
     formData.append("about", about);
-
+    formData.append("tags", JSON.stringify(tags.split(",").map(t => t.trim()).filter(Boolean)));
     formData.append("blogImage", blogImage);
     try {
-      const { data } = await axios.post(
-        "http://localhost:4001/api/blogs/create",
-        formData,
-        {
-          withCredentials: true,
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      const { data } = await apiRequest("post", "/blogs/create", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
       console.log(data);
-      toast.success(data.message || "User registered successfully");
+      toast.success(data.message || "Blog created successfully");
       setTitle("");
       setCategory("");
       setAbout("");
+      setTags("");
       setBlogImage("");
       setBlogImagePreview("");
     } catch (error) {
       console.log(error);
-      toast.error(error.message || "Please fill the required fields");
+      toast.error(error.response?.data?.message || "Please fill required fields");
     }
   };
+
+  const modules = {
+    toolbar: [
+      [{ 'header': [1, 2, false] }],
+      ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+      [{'list': 'ordered'}, {'list': 'bullet'}, {'indent': '-1'}, {'indent': '+1'}],
+      ['link', 'image'],
+      ['clean']
+    ],
+  };
+
   return (
-    <div>
-      <div className="min-h-screen  py-10">
-        <div className="max-w-4xl mx-auto p-6 border  rounded-lg shadow-lg">
-          <h3 className="text-2xl font-semibold mb-8">Create Blog</h3>
-          <form onSubmit={handleCreateBlog} className="space-y-6">
-            <div className="space-y-2">
-              <label className="block text-lg">Category</label>
+    <div className="min-h-screen p-8 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors">
+      <div className="max-w-4xl mx-auto bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-xl border dark:border-gray-700">
+        <h3 className="text-3xl font-bold mb-8 text-center text-gray-800 dark:text-gray-100">Create New Post</h3>
+        <form onSubmit={handleCreateBlog} className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label className="block text-sm font-semibold mb-2">Category</label>
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-400 rounded-md outline-none"
+                className="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 focus:outline-none transition"
               >
                 <option value="">Select Category</option>
-                <option value="Devotion">Devotion</option>
+                <option value="Technology">Technology</option>
+                <option value="Lifestyle">Lifestyle</option>
                 <option value="Sports">Sports</option>
-                <option value="Coding">Coding</option>
                 <option value="Entertainment">Entertainment</option>
                 <option value="Business">Business</option>
               </select>
             </div>
-
-            <div className="space-y-2">
-              <label className="block text-lg">Title</label>
+            <div>
+              <label className="block text-sm font-semibold mb-2">Title</label>
               <input
                 type="text"
-                placeholder="Enter your blog title"
+                placeholder="Enter post title"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-400   rounded-md outline-none"
+                className="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 focus:outline-none transition"
               />
             </div>
+          </div>
 
-            <div className="space-y-2">
-              <label className="block text-lg">Blog Image</label>
-              <div className="flex items-center justify-center">
-                <img
-                  src={blogImagePreview ? `${blogImagePreview}` : "/imgPL.webp"}
-                  alt="Image"
-                  className="w-full max-w-sm h-auto rounded-md object-cover"
-                />
+          <div>
+             <label className="block text-sm font-semibold mb-2">Tags (comma separated)</label>
+             <input
+                type="text"
+                placeholder="react, web development, tutorial"
+                value={tags}
+                onChange={(e) => setTags(e.target.value)}
+                className="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 focus:outline-none transition"
+              />
+          </div>
+
+          <div>
+            <label className="block text-sm font-semibold mb-2">Cover Image</label>
+            <div className="flex items-center space-x-4">
+              <label className="cursor-pointer bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-800 px-6 py-3 rounded-xl font-medium hover:bg-blue-100 dark:hover:bg-blue-900/50 transition">
+                <span>Upload Image</span>
+                <input type="file" onChange={changePhotoHandler} className="hidden" accept="image/*" />
+              </label>
+            </div>
+            {blogImagePreview && (
+              <div className="mt-4">
+                <img src={blogImagePreview} alt="Preview" className="h-48 w-full object-cover rounded-xl shadow-md" />
               </div>
-              <input
-                type="file"
-                onChange={changePhotoHandler}
-                className="w-full px-3 py-2 border border-gray-400   rounded-md outline-none"
-              />
-            </div>
+            )}
+          </div>
 
-            <div className="space-y-2">
-              <label className="block text-lg">About</label>
-              <textarea
-                rows="5"
-                placeholder="Write something about your blog"
-                value={about}
-                onChange={(e) => setAbout(e.target.value)}
-                className="w-full px-3 py-2  border border-gray-400  rounded-md outline-none"
-              />
+          <div>
+            <label className="block text-sm font-semibold mb-2">Content</label>
+            <div className="bg-white dark:bg-gray-800 rounded-xl overflow-hidden border border-gray-300 dark:border-gray-600">
+               <ReactQuill
+                 theme="snow"
+                 value={about}
+                 onChange={setAbout}
+                 modules={modules}
+                 className="h-64 mb-12 dark:text-white"
+               />
             </div>
+          </div>
 
-            <button
-              type="submit"
-              className="w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors duration-200"
-            >
-              Post Blog
-            </button>
-          </form>
-        </div>
+          <button
+            type="submit"
+            className="w-full py-4 bg-blue-600 text-white text-lg font-bold rounded-xl hover:bg-blue-700 transition duration-300 shadow-lg shadow-blue-500/30"
+          >
+            Publish Post
+          </button>
+        </form>
       </div>
     </div>
   );

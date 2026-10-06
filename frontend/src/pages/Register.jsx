@@ -1,4 +1,4 @@
-import axios from "axios";
+import { apiRequest } from "/src/services/api";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
@@ -39,16 +39,14 @@ function Register() {
     formData.append("education", education);
     formData.append("photo", photo);
     try {
-      const { data } = await axios.post(
-        "http://localhost:4001/api/users/register",
+      const { data } = await apiRequest("post", "http://localhost:4001/api/users/register",
         formData,
         {
           withCredentials: true,
           headers: {
             "Content-Type": "multipart/form-data",
           },
-        }
-      );
+        });
       localStorage.setItem("jwt", data.token);
       toast.success(data.message || "User registered successfully");
       setProfile(data);

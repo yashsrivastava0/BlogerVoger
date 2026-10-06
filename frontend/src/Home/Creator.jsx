@@ -1,4 +1,4 @@
-import axios from "axios";
+import { apiRequest } from "/src/services/api";
 import React, { useEffect, useState } from "react";
 
 function Creator() {
@@ -6,12 +6,10 @@ function Creator() {
   console.log(admin);
   useEffect(() => {
     const fetchAdmins = async () => {
-      const { data } = await axios.get(
-        "http://localhost:4001/api/users/admins",
+      const { data } = await apiRequest("get", "http://localhost:4001/api/users/admins",
         {
           withCredentials: true,
-        }
-      );
+        });
       console.log(data.admins);
       setAdmin(data.admins);
     };
