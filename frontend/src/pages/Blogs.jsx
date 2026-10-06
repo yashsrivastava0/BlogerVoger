@@ -9,7 +9,7 @@ function Blogs() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
 
-  const categories = ["All", "Technology", "Lifestyle", "Sports", "Entertainment", "Business"];
+  const categories = ["All", "Technology", "Business", "Sports", "Entertainment", "Devotion", "Lifestyle"];
 
   const filteredBlogs = blogs?.filter((blog) => {
     const matchesSearch = blog.title.toLowerCase().includes(searchTerm.toLowerCase()) ||

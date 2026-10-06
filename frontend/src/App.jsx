@@ -20,10 +20,9 @@ function App() {
   const hideNavbarFooter = ["/dashboard", "/login", "/register"].includes(
     location.pathname
   );
-  const { blogs, isAuthenticated } = useAuth();
-  let token = localStorage.getItem("jwt"); // Retrieve the token directly from the localStorage to maininting the routes protect (Go to login.jsx)
-  console.log(blogs);
-  console.log(isAuthenticated); // it is not using because every page refresh it was redirected to /login
+  const { isAuthenticated } = useAuth();
+  const token = localStorage.getItem("jwt");
+  const isUserLoggedIn = isAuthenticated || Boolean(token);
 
   return (
     <div>
@@ -32,7 +31,7 @@ function App() {
         <Route
           exact
           path="/"
-          element={token ? <Home /> : <Navigate to={"/login"} />}
+          element={isUserLoggedIn ? <Home /> : <Navigate to={"/login"} />}
         />
         <Route exact path="/blogs" element={<Blogs />} />
         <Route exact path="/about" element={<About />} />

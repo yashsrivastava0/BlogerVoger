@@ -1,99 +1,134 @@
 import React, { useState } from "react";
 import { useAuth } from "../context/AuthProvider";
 import { useNavigate } from "react-router-dom";
-import { apiRequest } from "/src/services/api";
 import { CiMenuBurger } from "react-icons/ci";
 import { BiSolidLeftArrowAlt } from "react-icons/bi";
+import { BookOpen, PlusCircle, User, Home, LogOut, Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
 
-function Sidebar({ setComponent }) {
-  const { profile, setIsAuthenticated } = useAuth();
-  // console.log(profile?.user);
+function Sidebar({ component, setComponent }) {
+  const { profile, logout } = useAuth();
   const navigateTo = useNavigate();
 
   const [show, setShow] = useState(false);
+  const [loggingOut, setLoggingOut] = useState(false);
 
   const handleComponents = (value) => {
     setComponent(value);
+    setShow(false);
   };
+
   const gotoHome = () => {
     navigateTo("/");
   };
 
   const handleLogout = async (e) => {
-    e.preventDefault();
+    if (e) e.preventDefault();
+    setLoggingOut(true);
     try {
-      const { data } = await apiRequest("get", "http://localhost:4001/api/users/logout",
-        { withCredentials: true });
-      toast.success(data.message);
-       localStorage.removeItem("jwt"); // deleting token in localStorage so that if user logged out it will goes to login page
-      setIsAuthenticated(false);
+      await logout();
+      toast.success("Signed out successfully");
       navigateTo("/login");
-    } catch (error) {
-      console.log(error);
-      toast.error(error.data.message || "Failed to logout");
+    } catch {
+      toast.error("Failed to sign out");
+    } finally {
+      setLoggingOut(false);
     }
   };
+
+  const menuItems = [
+    { label: "My Blogs", icon: BookOpen },
+    { label: "Create Blog", icon: PlusCircle },
+    { label: "My Profile", icon: User },
+  ];
 
   return (
     <>
       <div
-        className="sm:hidden fixed top-4 left-4 z-50"
+        className="sm:hidden fixed top-4 left-4 z-50 p-2 bg-white dark:bg-gray-800 rounded-xl shadow-md border dark:border-gray-700 cursor-pointer"
         onClick={() => setShow(!show)}
       >
-        <CiMenuBurger className="text-2xl" />
+        <CiMenuBurger className="text-2xl text-gray-800 dark:text-gray-200" />
       </div>
+
       <div
-        className={`w-64 h-full shadow-lg fixed top-0 left-0 bg-gray-50 transition-transform duration-300 transform sm:translate-x-0 ${
+        className={`w-64 h-full shadow-2xl fixed top-0 left-0 bg-white dark:bg-gray-900 border-r border-gray-100 dark:border-gray-800 transition-transform duration-300 transform z-40 sm:translate-x-0 ${
           show ? "translate-x-0" : "-translate-x-full"
         }`}
       >
         <div
-          className="sm:hidden absolute top-4 right-4 text-xl cursor-pointer"
+          className="sm:hidden absolute top-4 right-4 text-xl cursor-pointer p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300"
           onClick={() => setShow(!show)}
         >
           <BiSolidLeftArrowAlt className="text-2xl" />
         </div>
-        <div className="text-center">
-          <img
-            className="w-24 h-24 rounded-full mx-auto mb-2 object-cover"
-            src={profile?.user?.photo?.url || profile?.photo?.url || "/user.jpg"}
-            alt=""
-          />
-          <p className="text-lg font-semibold">{profile?.user?.name || profile?.name || "User"}</p>
+
+        {/* Profile Card */}
+        <div className="pt-8 pb-6 px-6 text-center border-b border-gray-100 dark:border-gray-800">
+          <div className="relative inline-block">
+            <img
+              className="w-20 h-20 rounded-full mx-auto mb-3 object-cover border-2 border-blue-500 shadow-md"
+              src={profile?.user?.photo?.url || profile?.photo?.url || "/user.jpg"}
+              alt="Avatar"
+            />
+            <span className="absolute bottom-3 right-0 w-4 h-4 bg-emerald-500 border-2 border-white dark:border-gray-900 rounded-full" />
+          </div>
+          <p className="text-base font-bold text-gray-900 dark:text-white truncate">
+            {profile?.user?.name || profile?.name || "Author"}
+          </p>
+          <p className="text-xs uppercase tracking-wider font-semibold text-blue-600 dark:text-blue-400 mt-0.5">
+            {profile?.user?.role || profile?.role || "Admin"}
+          </p>
         </div>
-        <ul className="space-y-6 mx-4">
-          <button
-            onClick={() => handleComponents("My Blogs")}
-            className="w-full px-4 py-2 bg-green-500 rounded-lg hover:bg-green-700 transition duration-300"
-          >
-            MY BLOGS
-          </button>
-          <button
-            onClick={() => handleComponents("Create Blog")}
-            className="w-full px-4 py-2 bg-blue-400 rounded-lg hover:bg-blue-700 transition duration-300"
-          >
-            CREATE BLOG
-          </button>
-          <button
-            onClick={() => handleComponents("My Profile")}
-            className="w-full px-4 py-2 bg-pink-500 rounded-lg hover:bg-pink-700 transition duration-300"
-          >
-            MY PROFILE
-          </button>
-          <button
-            onClick={gotoHome}
-            className="w-full px-4 py-2 bg-red-500 rounded-lg hover:bg-red-700 transition duration-300"
-          >
-            HOME
-          </button>
-          <button
-            onClick={handleLogout}
-            className="w-full px-4 py-2 bg-yellow-500 rounded-lg hover:bg-yellow-700 transition duration-300"
-          >
-            LOGOUT
-          </button>
-        </ul>
+
+        {/* Navigation Actions */}
+        <div className="p-4 space-y-2">
+          {menuItems.map(({ label, icon: Icon }) => {
+            const active = component === label;
+            return (
+              <button
+                key={label}
+                onClick={() => handleComponents(label)}
+                className={`w-full flex items-center space-x-3 px-4 py-3 rounded-2xl text-xs font-bold uppercase tracking-wider transition duration-200 ${
+                  active
+                    ? "bg-blue-600 text-white shadow-lg shadow-blue-500/25"
+                    : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800/60"
+                }`}
+              >
+                <Icon size={18} />
+                <span>{label}</span>
+              </button>
+            );
+          })}
+
+          <div className="pt-4 mt-4 border-t border-gray-100 dark:border-gray-800 space-y-2">
+            <button
+              onClick={gotoHome}
+              className="w-full flex items-center space-x-3 px-4 py-3 rounded-2xl text-xs font-bold uppercase tracking-wider text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800/60 transition"
+            >
+              <Home size={18} />
+              <span>Back to Home</span>
+            </button>
+
+            <button
+              onClick={handleLogout}
+              disabled={loggingOut}
+              className="w-full flex items-center space-x-3 px-4 py-3 rounded-2xl text-xs font-bold uppercase tracking-wider text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition disabled:opacity-60"
+            >
+              {loggingOut ? (
+                <>
+                  <Loader2 size={18} className="animate-spin" />
+                  <span>Signing out...</span>
+                </>
+              ) : (
+                <>
+                  <LogOut size={18} />
+                  <span>Sign Out</span>
+                </>
+              )}
+            </button>
+          </div>
+        </div>
       </div>
     </>
   );

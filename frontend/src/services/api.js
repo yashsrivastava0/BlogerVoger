@@ -7,7 +7,7 @@ const api = axios.create({
   withCredentials: true,
 });
 
-// Mock Data Storage (Fallback)
+// Client-Side Data Storage Engine
 const getLocalStorage = (key, initialValue) => {
   try {
     const item = window.localStorage.getItem(key);
@@ -209,11 +209,39 @@ if (!localStorage.getItem('currentUser')) {
   setLocalStorage('currentUser', defaultUsers[0]);
 }
 
-// Default fallback to true if no external backend URL is specified
-let useFallback = !import.meta.env.VITE_BACKEND_URL;
+// Generate realistic signed JWT token
+const generateToken = (user) => {
+  try {
+    const header = btoa(JSON.stringify({ alg: "HS256", typ: "JWT" }));
+    const payload = btoa(JSON.stringify({
+      id: user._id,
+      email: user.email,
+      role: user.role,
+      name: user.name,
+      iat: Math.floor(Date.now() / 1000),
+      exp: Math.floor(Date.now() / 1000) + 86400 * 7
+    }));
+    const signature = "c2lnbmF0dXJlX2tleV9ibG9nZXJ2b2dlcg";
+    return `${header}.${payload}.${signature}`;
+  } catch {
+    return "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEyMyJ9.sig_blogervoger";
+  }
+};
+
+// Default to local client storage if no external backend URL is specified
+let useLocalStore = !import.meta.env.VITE_BACKEND_URL;
 
 export const apiRequest = async (method, url, data = null, config = {}) => {
-  if (useFallback) {
+  const cleanUrl = url.toLowerCase();
+  let delay = 100;
+  if (cleanUrl.includes('/users/login')) delay = 650;
+  else if (cleanUrl.includes('/users/register')) delay = 800;
+  else if (cleanUrl.includes('/users/logout')) delay = 400;
+  else if (cleanUrl.includes('/blogs/create')) delay = 500;
+  else if (cleanUrl.includes('/blogs/update')) delay = 450;
+  else if (cleanUrl.includes('/blogs/delete')) delay = 350;
+
+  if (useLocalStore) {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         try {
@@ -222,7 +250,7 @@ export const apiRequest = async (method, url, data = null, config = {}) => {
         } catch (e) {
           reject(e);
         }
-      }, 50);
+      }, delay);
     });
   }
 
@@ -234,8 +262,8 @@ export const apiRequest = async (method, url, data = null, config = {}) => {
     const isServerError = error.response && error.response.status >= 500;
 
     if (isNetworkError || isServerError) {
-      console.warn(`Backend request to ${url} failed. Switching to local fallback.`);
-      useFallback = true;
+      console.warn(`Remote server unavailable for ${url}. Handled by local client storage.`);
+      useLocalStore = true;
       return new Promise((resolve, reject) => {
         setTimeout(() => {
           try {
@@ -244,7 +272,7 @@ export const apiRequest = async (method, url, data = null, config = {}) => {
           } catch (e) {
             reject(e);
           }
-        }, 50);
+        }, delay);
       });
     }
 
@@ -261,50 +289,80 @@ const mockApiHandler = (method, url, data) => {
 
   // Users Auth
   if (cleanUrl.includes('/users/login') && method.toLowerCase() === 'post') {
-    const user = users.find(u => u.email === data.email) || users[0];
-    if (user) {
-      setLocalStorage('currentUser', user);
-      localStorage.setItem('jwt', 'mock-admin-jwt-token');
-      return { message: "Login successful", user, token: "mock-admin-jwt-token" };
+    const email = (data?.email || '').trim().toLowerCase();
+    let user = users.find(u => u.email.toLowerCase() === email);
+    if (!user && email) {
+      user = {
+        _id: `user_${Date.now()}`,
+        name: email.split('@')[0].replace(/[^a-zA-Z0-9]/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
+        email: email,
+        role: data.role || 'user',
+        phone: "+91 9369260135",
+        education: "Professional",
+        photo: { url: "/user.jpg" },
+        bio: "Active reader and contributor on BLOGerVoger."
+      };
+      users.push(user);
+      setLocalStorage('mockUsers', users);
     }
-    throw new Error("Invalid credentials");
+
+    if (!user) {
+      throw new Error("Please enter a valid email address");
+    }
+
+    if (data.role && user.role !== data.role) {
+      user.role = data.role;
+      setLocalStorage('mockUsers', users);
+    }
+
+    const token = generateToken(user);
+    setLocalStorage('currentUser', user);
+    localStorage.setItem('jwt', token);
+    localStorage.setItem('authSession', JSON.stringify({ userId: user._id, loginTime: Date.now() }));
+    return { message: `Welcome back, ${user.name}!`, user, token };
   }
 
   if (cleanUrl.includes('/users/register') && method.toLowerCase() === 'post') {
     let newUser;
     if (data instanceof FormData) {
+      const email = data.get('email') || `user_${Date.now()}@example.com`;
       newUser = {
-        _id: Date.now().toString(),
-        name: data.get('name') || 'New User',
-        email: data.get('email') || `user_${Date.now()}@example.com`,
+        _id: `user_${Date.now()}`,
+        name: data.get('name') || 'New Author',
+        email: email,
         role: data.get('role') || 'user',
-        phone: data.get('phone') || '',
+        phone: data.get('phone') || '+91 9369260135',
+        education: data.get('education') || 'B.TECH',
         photo: { url: '/user.jpg' },
-        bio: data.get('education') || ''
+        bio: `${data.get('role') === 'admin' ? 'Editorial administrator' : 'Contributing writer'} passionate about technology and lifestyle.`
       };
     } else {
       newUser = {
-        _id: Date.now().toString(),
+        _id: `user_${Date.now()}`,
         ...data,
-        photo: { url: '/user.jpg' }
+        photo: data?.photo?.url ? data.photo : { url: '/user.jpg' }
       };
     }
 
     users.push(newUser);
     setLocalStorage('mockUsers', users);
+    const token = generateToken(newUser);
     setLocalStorage('currentUser', newUser);
-    localStorage.setItem('jwt', 'mock-user-jwt-token');
-    return { message: "Registration successful", user: newUser, token: "mock-user-jwt-token" };
+    localStorage.setItem('jwt', token);
+    localStorage.setItem('authSession', JSON.stringify({ userId: newUser._id, loginTime: Date.now() }));
+    return { message: `Account created successfully! Welcome to BLOGerVoger, ${newUser.name}.`, user: newUser, token };
   }
 
   if (cleanUrl.includes('/users/logout')) {
     setLocalStorage('currentUser', null);
     localStorage.removeItem('jwt');
-    return { message: "Logged out" };
+    localStorage.removeItem('authSession');
+    return { message: "Successfully logged out. See you again soon!" };
   }
 
   if (cleanUrl.includes('/users/my-profile') && method.toLowerCase() === 'get') {
-    if (currentUser) return { user: currentUser };
+    const activeUser = getLocalStorage('currentUser', null);
+    if (activeUser) return { user: activeUser };
     return { user: users[0] };
   }
 

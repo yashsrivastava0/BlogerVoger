@@ -1,64 +1,104 @@
-<div align="center">
-  <h1>🚀 BLOGerVoger - Premium Edition</h1>
-  <p>A modernized, full-stack blogging application built with the MERN stack, completely redesigned with a sleek user interface, rich features, and a seamless fallback architecture.</p>
+# 🚀 BLOGerVoger
 
-  [![React](https://img.shields.io/badge/React-18.x-blue.svg?style=flat&logo=react)](https://reactjs.org/)
-  [![Node.js](https://img.shields.io/badge/Node.js-20.x-green.svg?style=flat&logo=nodedotjs)](https://nodejs.org/)
-  [![MongoDB](https://img.shields.io/badge/MongoDB-Latest-green.svg?style=flat&logo=mongodb)](https://www.mongodb.com/)
+<div align="center">
+
+  **A modern full-stack publishing platform designed for readers, writers, and creators.**
+
+  [![React](https://img.shields.io/badge/React-18.x-61DAFB.svg?style=flat&logo=react)](https://reactjs.org/)
+  [![Vite](https://img.shields.io/badge/Vite-5.x-646CFF.svg?style=flat&logo=vite)](https://vitejs.dev/)
   [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.x-38B2AC.svg?style=flat&logo=tailwind-css)](https://tailwindcss.com/)
-  [![Framer Motion](https://img.shields.io/badge/Framer_Motion-14.x-E902B5.svg?style=flat&logo=framer)](https://www.framer.com/motion/)
+  [![Framer Motion](https://img.shields.io/badge/Framer_Motion-14.x-FF0055.svg?style=flat&logo=framer)](https://www.framer.com/motion/)
+  [![Node.js](https://img.shields.io/badge/Node.js-22.x-339933.svg?style=flat&logo=nodedotjs)](https://nodejs.org/)
+  [![Express](https://img.shields.io/badge/Express-4.x-000000.svg?style=flat&logo=express)](https://expressjs.com/)
+
 </div>
 
 ---
 
-## ✨ What's New? (Premium Upgrades)
+## 📖 Overview
 
-- **🎨 Gorgeous Dark/Light Mode:** Seamless toggle using Tailwind CSS and React Context.
-- **✨ Fluid Animations:** Integrated **Framer Motion** for premium scroll effects, page transitions, and hover states.
-- **📝 Rich Text Editor:** Create and update posts using **React Quill**, beautifully rendered with `@tailwindcss/typography`.
-- **💬 Engagement Features:** Users can now **Like** and **Comment** on posts, with backend routing and UI support.
-- **🔍 Advanced Search & Filtering:** Instantly search through posts by title, categories, or tags.
-- **🛡️ Robust Fallback Architecture:** A custom API layer that intelligently detects backend failures (Network or 5xx errors) and switches to a seamless `localStorage` mocking mode, ensuring the app remains usable even when the server is down.
+**BLOGerVoger** provides a fast, dynamic, and responsive blogging experience. Whether discovering trending articles, reading deep-dives across multiple topics, or composing rich new posts with rich-text editing, BLOGerVoger is built for seamless content discovery and community engagement.
+
+> 📌 **Project Origin:** This platform was originally created in 2024 as an academic assignment project and has since been modernized with responsive architecture, dark mode, and an enhanced creator experience.
+
+---
+
+## ✨ Features
+
+- **🎨 Modern Responsive Interface:** Crafted with Tailwind CSS, featuring full Dark/Light theme switching and smooth layout transitions powered by **Framer Motion**.
+- **📝 Rich Text Publishing:** Comprehensive post editor powered by **React Quill** with typography formatting, cover images, and customizable tags.
+- **💬 Interactive Engagement:** Built-in appreciation system supporting instant article likes and discussions.
+- **🔍 Real-Time Search & Category Filters:** Instant search across articles by title, keywords, or topics (Technology, Business, Sports, Entertainment, Devotion).
+- **👤 Creator Profiles & Admin Dashboard:** Dedicated dashboards for managing published articles, editing live stories, and updating author profiles.
+- **⚡ Client-Side Persistence:** Seamless local data engine that preserves user profiles, posts, and interactions instantly.
+
+---
 
 ## 🛠 Tech Stack
 
-### Front-End ⚛️
-- **React.js (Vite):** Blazing fast frontend framework.
-- **Tailwind CSS & Typography:** For beautiful, responsive, and robust styling.
-- **Framer Motion:** For advanced layout animations.
-- **React Quill:** Rich text editor for blogs.
-- **Axios & Context API:** For structured API calls and state management.
+| Domain | Technologies |
+|---|---|
+| **Frontend** | React 18, Vite, React Router 6, Framer Motion, Lucide Icons, React Icons |
+| **Styling & UI** | Tailwind CSS, `@tailwindcss/typography`, React Multi Carousel, React Hot Toast |
+| **Content Editor** | React Quill (`quill.snow.css`) |
+| **Backend API** | Node.js, Express.js, JWT, bcryptjs |
+| **Database & Media** | MongoDB / Mongoose, Cloudinary |
 
-### Back-End 🟢
-- **Node.js & Express.js:** Scalable backend framework.
-- **MongoDB & Mongoose:** NoSQL database with advanced schemas (Tags, Comments, Likes).
-- **JWT & bcryptjs:** Secure authentication and password hashing.
-- **Cloudinary:** Remote media storage for blog images and avatars.
+---
 
-## ⚙️ Installation & Setup
+## 🚀 Quick Start
 
-1. **Clone the repository:**
-   ```
-   git clone https://github.com/yashsrivastava0/BlogerVoger.git
-   cd BlogerVoger
-   ```
+### 1. Prerequisites
+- **Node.js** (v18 or higher)
+- **npm** (v9 or higher)
 
-2. **Back End Setup:**
-   ```
-   cd backend
-   npm install
-   ```
-   Create a `.env` file with your credentials (MongoDB URI, Port, Cloudinary Keys, JWT Secret) and run the start script.
+### 2. Installation
+Clone the repository and install dependencies:
 
-3. **Front End Setup:**
-   ```
-   cd frontend
-   npm install
-   ```
-   Run the dev script to start the local development server.
+```bash
+git clone https://github.com/yashsrivastava0/BlogerVoger.git
+cd BlogerVoger
+npm install
+```
 
-## 🔄 Fake Auth & Fallback Mode
-If the MongoDB backend is unavailable or taking too long to respond, the frontend will automatically switch to **Fallback Mode**.
-- It captures API errors and routes them through a mock handler.
-- Uses `localStorage` to simulate a database for users and blogs.
-- Allows registration, login, and blogging without a live Node.js server!
+### 3. Development Server
+Run the unified development command:
+
+```bash
+npm run dev
+```
+
+Open your browser at `http://localhost:3000` to explore the application.
+
+### 4. Build for Production
+To generate an optimized production bundle:
+
+```bash
+npm run build
+```
+
+---
+
+## 📂 Project Structure
+
+```
+BlogerVoger/
+├── backend/            # Express REST API, auth controllers, and Mongoose schemas
+├── frontend/           # Vite + React single-page application
+│   ├── public/         # Static assets, category photography, and avatars
+│   ├── src/
+│   │   ├── Home/       # Hero, Trending carousel, Devotional, and Creator showcases
+│   │   ├── components/ # Global Navigation, Footer, and layout elements
+│   │   ├── context/    # Authentication & Theme state providers
+│   │   ├── dashboard/  # Creator Studio: Post creation, management, and profiles
+│   │   ├── pages/      # Route views: All Blogs, Details, Creators, Auth, About
+│   │   └── services/   # Client API layer and local persistence engine
+│   └── vite.config.js  # Vite server and plugin configuration
+└── package.json        # Root workspace configuration
+```
+
+---
+
+## 📝 License
+
+Distributed under the MIT License. See `LICENSE` for more information.

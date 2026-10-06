@@ -11,6 +11,7 @@ function CreateBlog() {
   const [tags, setTags] = useState("");
   const [blogImage, setBlogImage] = useState("");
   const [blogImagePreview, setBlogImagePreview] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const changePhotoHandler = (e) => {
     const file = e.target.files[0];
@@ -24,6 +25,12 @@ function CreateBlog() {
 
   const handleCreateBlog = async (e) => {
     e.preventDefault();
+    if (!title.trim() || !category || !about.trim()) {
+      toast.error("Please fill in title, category, and content.");
+      return;
+    }
+
+    setLoading(true);
     const formData = new FormData();
     formData.append("title", title);
     formData.append("category", category);
@@ -36,7 +43,6 @@ function CreateBlog() {
           "Content-Type": "multipart/form-data",
         },
       });
-      console.log(data);
       toast.success(data.message || "Blog created successfully");
       setTitle("");
       setCategory("");
@@ -47,6 +53,8 @@ function CreateBlog() {
     } catch (error) {
       console.log(error);
       toast.error(error.response?.data?.message || "Please fill required fields");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -134,9 +142,14 @@ function CreateBlog() {
 
           <button
             type="submit"
-            className="w-full py-4 bg-blue-600 text-white text-lg font-bold rounded-xl hover:bg-blue-700 transition duration-300 shadow-lg shadow-blue-500/30"
+            disabled={loading}
+            className="w-full py-4 bg-blue-600 text-white text-base font-bold rounded-xl hover:bg-blue-700 transition duration-300 shadow-lg shadow-blue-500/25 flex items-center justify-center space-x-2 disabled:opacity-70"
           >
-            Publish Post
+            {loading ? (
+              <span>Publishing Article...</span>
+            ) : (
+              <span>Publish Post</span>
+            )}
           </button>
         </form>
       </div>
