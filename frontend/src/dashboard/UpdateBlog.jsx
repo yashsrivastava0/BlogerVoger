@@ -1,4 +1,4 @@
-import axios from "axios";
+import { apiRequest } from "/src/services/api";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
@@ -28,16 +28,14 @@ function UpdateBlog() {
   useEffect(() => {
     const fetchBlog = async () => {
       try {
-        const { data } = await axios.get(
-          `http://localhost:4001/api/blogs/single-blog/${id}`,
+        const { data } = await apiRequest("get", `http://localhost:4001/api/blogs/single-blog/${id}`,
 
           {
             withCredentials: true,
             headers: {
               "Content-Type": "multipart/form-data",
             },
-          }
-        );
+          });
         console.log(data);
         setTitle(data?.title);
         setCategory(data?.category);
@@ -60,16 +58,14 @@ function UpdateBlog() {
 
     formData.append("blogImage", blogImage);
     try {
-      const { data } = await axios.put(
-        `http://localhost:4001/api/blogs/update/${id}`,
+      const { data } = await apiRequest("put", `http://localhost:4001/api/blogs/update/${id}`,
         formData,
         {
           withCredentials: true,
           headers: {
             "Content-Type": "multipart/form-data",
           },
-        }
-      );
+        });
       console.log(data);
       toast.success(data.message || "Blog updated successfully");
       navigateTo("/");

@@ -1,4 +1,4 @@
-import axios from "axios";
+import { apiRequest } from "/src/services/api";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
@@ -16,16 +16,14 @@ function Login() {
     e.preventDefault();
 
     try {
-      const { data } = await axios.post(
-        "http://localhost:4001/api/users/login",
+      const { data } = await apiRequest("post", "http://localhost:4001/api/users/login",
         { email, password, role },
         {
           withCredentials: true,
           headers: {
             "Content-Type": "application/json",
           },
-        }
-      );
+        });
       console.log(data);
       localStorage.setItem("jwt", data.token);
       toast.success(data.message || "User Logined successfully", {
@@ -40,7 +38,7 @@ function Login() {
     } catch (error) {
       console.log(error);
       toast.error(
-        error.response.data.message || "Please fill the required fields",
+        (error.response && error.response.data && error.response.data.message) || error.message || "Please fill the required fields",
         {
           duration: 3000,
         }

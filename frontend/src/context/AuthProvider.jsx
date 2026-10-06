@@ -1,49 +1,35 @@
-
-import axios from "axios";
 import React, { createContext, useContext, useEffect, useState } from "react";
+import { apiRequest } from "/src/services/api";
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [blogs, setBlogs] = useState();
-  const [profile, setProfile] = useState();
+  const [blogs, setBlogs] = useState([]);
+  const [profile, setProfile] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        // token should be let type variable because its value will change in every login. (in backend also)
-        let token = localStorage.getItem("jwt"); // Retrieve the token directly from the localStorage (Go to login.jsx)
-        console.log(token);
-        if (token) {
-          const { data } = await axios.get(
-            "http://localhost:4001/api/users/my-profile",
-            {
-              withCredentials: true,
-              headers: {
-                "Content-Type": "application/json",
-              },
-            }
-          );
-          console.log(data.user);
-          setProfile(data.user);
-          setIsAuthenticated(true);
-        }
+        const { data } = await apiRequest('get', "/users/my-profile");
+        setProfile(data.user);
+        setIsAuthenticated(true);
       } catch (error) {
-        console.log(error);
+        console.error("Error fetching profile", error);
+        setProfile(null);
+        setIsAuthenticated(false);
+      } finally {
+        setLoading(false);
       }
     };
 
     const fetchBlogs = async () => {
       try {
-        const { data } = await axios.get(
-          "http://localhost:4001/api/blogs/all-blogs",
-          { withCredentials: true }
-        );
-        console.log(data);
-        setBlogs(data);
+        const { data } = await apiRequest('get', "/blogs/all-blogs");
+        setBlogs(data.blogs);
       } catch (error) {
-        console.log(error);
+        console.error("Error fetching blogs", error);
       }
     };
 
@@ -55,10 +41,13 @@ export const AuthProvider = ({ children }) => {
     <AuthContext.Provider
       value={{
         blogs,
+        setBlogs,
         profile,
         setProfile,
         isAuthenticated,
         setIsAuthenticated,
+        loading,
+        setLoading
       }}
     >
       {children}
