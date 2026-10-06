@@ -1,4 +1,4 @@
-import axios from "axios";
+import api from "../utils/axios";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useParams } from "react-router-dom";
@@ -10,8 +10,8 @@ function Detail() {
   useEffect(() => {
     const fetchblogs = async () => {
       try {
-        const { data } = await axios.get(
-          `http://localhost:4001/api/blogs/single-blog/${id}`,
+        const { data } = await api.get(
+          `/api/blogs/single-blog/${id}`,
 
           {
             withCredentials: true,

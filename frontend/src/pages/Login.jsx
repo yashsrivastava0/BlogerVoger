@@ -1,4 +1,4 @@
-import axios from "axios";
+import api from "../utils/axios";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
@@ -16,8 +16,8 @@ function Login() {
     e.preventDefault();
 
     try {
-      const { data } = await axios.post(
-        "http://localhost:4001/api/users/login",
+      const { data } = await api.post(
+        "/api/users/login",
         { email, password, role },
         {
           withCredentials: true,

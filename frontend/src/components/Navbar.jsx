@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { AiOutlineMenu } from "react-icons/ai";
 import { IoCloseSharp } from "react-icons/io5";
 import { useAuth } from "../context/AuthProvider";
-import axios from "axios";
+import api from "../utils/axios";
 import toast from "react-hot-toast";
 
 function Navbar() {
@@ -16,8 +16,8 @@ function Navbar() {
   const handleLogout = async (e) => {
     e.preventDefault();
     try {
-      const { data } = await axios.get(
-        "http://localhost:4001/api/users/logout",
+      const { data } = await api.get(
+        "/api/users/logout",
         { withCredentials: true }
       );
       console.log(data);

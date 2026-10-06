@@ -1,5 +1,5 @@
 
-import axios from "axios";
+import api from "../utils/axios";
 import React, { createContext, useContext, useEffect, useState } from "react";
 
 export const AuthContext = createContext();
@@ -16,8 +16,8 @@ export const AuthProvider = ({ children }) => {
         let token = localStorage.getItem("jwt"); // Retrieve the token directly from the localStorage (Go to login.jsx)
         console.log(token);
         if (token) {
-          const { data } = await axios.get(
-            "http://localhost:4001/api/users/my-profile",
+          const { data } = await api.get(
+            "/api/users/my-profile",
             {
               withCredentials: true,
               headers: {
@@ -36,8 +36,8 @@ export const AuthProvider = ({ children }) => {
 
     const fetchBlogs = async () => {
       try {
-        const { data } = await axios.get(
-          "http://localhost:4001/api/blogs/all-blogs",
+        const { data } = await api.get(
+          "/api/blogs/all-blogs",
           { withCredentials: true }
         );
         console.log(data);

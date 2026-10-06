@@ -1,4 +1,4 @@
-import axios from "axios";
+import api from "../utils/axios";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
@@ -8,8 +8,8 @@ function MyBlogs() {
   useEffect(() => {
     const fetchMyBlogs = async () => {
       try {
-        const { data } = await axios.get(
-          "http://localhost:4001/api/blogs/my-blog",
+        const { data } = await api.get(
+          "/api/blogs/my-blog",
           { withCredentials: true }
         );
         console.log(data);
@@ -22,8 +22,8 @@ function MyBlogs() {
   }, []);
 
   const handleDelete = async (id) => {
-    await axios
-      .delete(`http://localhost:4001/api/blogs/delete/${id}`, {
+    await api
+      .delete(`/api/blogs/delete/${id}`, {
         withCredentials: true,
       })
       .then((res) => {
